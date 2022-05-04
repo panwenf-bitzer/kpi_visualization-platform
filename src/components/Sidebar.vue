@@ -4,7 +4,7 @@
             text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
             <template v-for="item in items">
                 <template v-if="item.subs">
-                    <el-submenu :index="item.index" :key="item.index">
+                    <el-submenu :index="item.index" :key="item.index" v-show="sidebar_show_director">
                         <template #title>
                             <i :class="item.icon"></i>
                             <span>{{ item.title }}</span>
@@ -20,8 +20,14 @@
                         </template>
                     </el-submenu>
                 </template>
-                <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                <template v-else-if="item.manager">
+                    <el-menu-item :index="item.index" :key="item.index" v-show="sidebar_show_manager">
+                        <i :class="item.icon"></i>
+                        <template #title>{{ item.title }}</template>
+                    </el-menu-item>
+                </template>
+              <template v-else>
+                    <el-menu-item :index="item.index" :key="item.index" v-show="sidebar_show_MD">
                         <i :class="item.icon"></i>
                         <template #title>{{ item.title }}</template>
                     </el-menu-item>
@@ -32,91 +38,126 @@
 </template>
 
 <script>
-import { computed, watch } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 export default {
     setup() {
         const items = [
             {
-                icon: "el-icon-lx-home",
-                index: "/dashboard",
-                title: "系统首页",
-            },
-            {
-                icon: "el-icon-lx-cascades",
-                index: "/table",
-                title: "基础表格",
-            },
-            {
-                icon: "el-icon-lx-copy",
-                index: "/tabs",
-                title: "tab选项卡",
-            },
-            {
-                icon: "el-icon-lx-calendar",
-                index: "3",
-                title: "表单相关",
-                subs: [
-                    {
-                        index: "/form",
-                        title: "基本表单",
-                    },
-                    {
-                        index: "/upload",
-                        title: "文件上传",
-                    },
-                    {
-                        index: "4",
-                        title: "三级菜单",
-                        subs: [
-                            {
-                                index: "/editor",
-                                title: "富文本编辑器",
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                icon: "el-icon-lx-emoji",
-                index: "/icon",
-                title: "自定义图标",
-            },
-            {
                 icon: "el-icon-pie-chart",
-                index: "/charts",
-                title: "schart图表",
+                index: "/dash_boardMD",
+                title: "MD Dashboard",
+                MD:"True"
             },
-            {
-                icon: "el-icon-lx-global",
-                index: "/i18n",
-                title: "国际化功能",
+
+          {
+                icon: "el-icon-pie-chart",
+                index: "",
+                title: "Director Dashboard",
+                director:"True",
+                subs:[
+                                {
+                icon: "el-icon-pie-chart",
+                index: "/dash_throughput",
+                title: "throughput dashboard",
             },
-            {
-                icon: "el-icon-lx-warn",
-                index: "7",
-                title: "错误处理",
-                subs: [
-                    {
-                        index: "/permission",
-                        title: "权限测试",
-                    },
-                    {
-                        index: "/404",
-                        title: "404页面",
-                    },
-                ],
+                     {
+                icon: "el-icon-pie-chart",
+                index: "/dash_productivity",
+                title: "productivity dashboard",
             },
-            {
-                icon: "el-icon-lx-redpacket_fill",
-                index: "/donate",
-                title: "支持作者",
+            ],
+          },
+          {
+                icon: "el-icon-pie-chart",
+                index: "/dash_board",
+                title: "Manager Dashboard",
+                manager:"True"
             },
+
+          // {
+          //       icon: "el-icon-lx-home",
+          //       index: "/throughput",
+          //       title: "Throughput",
+          //       subs:[
+          //                       {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/charts_SH",
+          //       title: "SH line",
+          //   },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/charts_SCR",
+          //       title: "SCR line",
+          //   },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/charts_SC",
+          //       title: "SC line",
+          //   },
+          //   //          {
+          //   //     icon: "el-icon-pie-chart",
+          //   //     index: "/charts_MSK",
+          //   //     title: "MSK line",
+          //   // },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/charts_ALU",
+          //       title: "ALU&MSK line",
+          //   },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/charts_spare",
+          //       title: "Throughput time table",
+          //   },
+          //
+          //       ]
+          // },
+          // {
+          //       icon: "el-icon-lx-home",
+          //       index: "/Productivity",
+          //       title: "Productivity",
+          //       subs:[
+          //                       {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/Pro_charts_SH",
+          //       title: "SH Assembly line",
+          //   },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/Pro_charts_SCR",
+          //       title: "SCR Assembly line",
+          //   },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/Pro_charts_SC",
+          //       title: "SC Assembly line",
+          //   },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/Pro_charts_MSK",
+          //       title: "CNC line",
+          //   },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/Pro_charts_ALU",
+          //       title: "ALU&MSK line",
+          //   },
+          //            {
+          //       icon: "el-icon-pie-chart",
+          //       index: "/Pro_charts_spare",
+          //       title: "Attendance table",
+          //   },
+          //
+          //       ]
+          // },
         ];
-
+        const sidebar_show_director=ref(false)
+        const sidebar_show_manager=ref(false)
+        const sidebar_show_MD=ref(false)
         const route = useRoute();
-
+        const group=localStorage.getItem("role")
         const onRoutes = computed(() => {
             return route.path;
         });
@@ -124,10 +165,25 @@ export default {
         const store = useStore();
         const collapse = computed(() => store.state.collapse);
 
+        onMounted(()=>{
+          if (group==="OperationMD"){
+            sidebar_show_director.value=true
+            sidebar_show_MD.value=true
+            sidebar_show_manager.value=true
+          }
+          if (group==="ProductionDirector"){
+            sidebar_show_manager.value=true
+            sidebar_show_director.value=true
+          }
+        })
+
         return {
             items,
             onRoutes,
             collapse,
+            sidebar_show_director,
+            sidebar_show_manager,
+            sidebar_show_MD
         };
     },
 };

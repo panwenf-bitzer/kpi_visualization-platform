@@ -20,7 +20,6 @@ a {
     text-decoration: none
 }
 
-
 .content-box {
     position: absolute;
     left: 250px;
@@ -30,7 +29,9 @@ a {
     padding-bottom: 30px;
     -webkit-transition: left .3s ease-in-out;
     transition: left .3s ease-in-out;
-    background: #f0f0f0;
+    /*background: #f0f0f0;*/
+    /*background: #1f2f3d;*/
+      background: white;
 }
 
 .content {
@@ -42,7 +43,7 @@ a {
 }
 
 .content-collapse {
-    left: 65px;
+    left: 0px;
 }
 
 .container {

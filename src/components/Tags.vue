@@ -11,13 +11,13 @@
         <div class="tags-close-box">
             <el-dropdown @command="handleTags">
                 <el-button size="mini" type="primary">
-                    标签选项
+                    tags options
                     <i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu size="small">
-                        <el-dropdown-item command="other">关闭其他</el-dropdown-item>
-                        <el-dropdown-item command="all">关闭所有</el-dropdown-item>
+                        <el-dropdown-item command="other">close others</el-dropdown-item>
+                        <el-dropdown-item command="all">close all</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -91,7 +91,7 @@ export default {
         const handleTags = (command) => {
             command === "other" ? closeOther() : closeAll();
         };
-
+        //
         // 关闭当前页面的标签页
         // store.commit("closeCurrentTag", {
         //     $router: router,
@@ -103,6 +103,7 @@ export default {
             tagsList,
             showTags,
             closeTags,
+            setTags,
             handleTags,
         };
     },

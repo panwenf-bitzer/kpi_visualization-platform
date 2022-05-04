@@ -3,7 +3,8 @@ import {createStore} from 'vuex'
 export default createStore({
     state: {
         tagsList: [],
-        collapse: false
+        collapse: true,
+        theme:"heavy"
     },
     mutations: {
         delTagsItem(state, data) {
@@ -49,6 +50,10 @@ export default createStore({
         // 侧边栏折叠
         handleCollapse(state, data) {
             state.collapse = data;
+        },
+        // 主题切换
+        handleTheme(state,data){
+            state.theme=data
         }
     },
     actions: {},

@@ -7,12 +7,12 @@
             <div class="content">
                 <router-view v-slot="{ Component }">
                     <transition name="move" mode="out-in">
-                        <keep-alive :include="tagsList">
-                            <component :is="Component" />
+                        <keep-alive exclude="login">
+                            <component :is="Component"> </component>
                         </keep-alive>
                     </transition>
                 </router-view>
-                <!-- <el-backtop target=".content"></el-backtop> -->
+                 <el-backtop target=".content"></el-backtop>
             </div>
         </div>
     </div>

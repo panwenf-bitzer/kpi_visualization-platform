@@ -1,25 +1,39 @@
 <template>
     <div class="header">
         <!-- 折叠按钮 -->
-        <div class="collapse-btn" @click="collapseChage">
+        <div class="collapse-btn" @click="collapseChage" v-show="collapse_visible">
             <i v-if="!collapse" class="el-icon-s-fold"></i>
             <i v-else class="el-icon-s-unfold"></i>
         </div>
-        <div class="logo">后台管理系统</div>
+        <div class="logo" v-show="collapse_visible">KPI Visualization Platform</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 消息中心 -->
-                <div class="btn-bell">
-                    <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <router-link to="/tabs">
-                            <i class="el-icon-bell"></i>
-                        </router-link>
-                    </el-tooltip>
-                    <span class="btn-bell-badge" v-if="message"></span>
-                </div>
-                <!-- 用户头像 -->
+<!--                <div class="btn-bell">-->
+<!--                    <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`information center`" placement="bottom">-->
+<!--                        <router-link to="/tabs">-->
+<!--                            <i class="el-icon-bell"></i>-->
+<!--                        </router-link>-->
+<!--                    </el-tooltip>-->
+<!--                    <span class="btn-bell-badge" v-if="message"></span>-->
+<!--                </div>-->
+              <!-- 主题设置 -->
+              <el-dropdown @command="handleTheme" v-if="false">
+                <el-button size="mini" type="success">
+                    Theme
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <template #dropdown>
+                    <el-dropdown-menu size="small">
+                        <el-dropdown-item command="light">light style</el-dropdown-item>
+                        <el-dropdown-item command="middle">medium style</el-dropdown-item>
+                        <el-dropdown-item command="heavy">heavy style</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+              <!-- 用户头像 -->
                 <div class="user-avator">
-                    <img src="../assets/img/img.jpg" />
+                    <img src="../assets/img/logo.png" style="height: 100%" alt=""/>
                 </div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -29,11 +43,14 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-                                <el-dropdown-item>项目仓库</el-dropdown-item>
-                            </a>
-                            <el-dropdown-item command="user">个人中心</el-dropdown-item>
-                            <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
+<!--                            <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">-->
+<!--                                <el-dropdown-item>project repository</el-dropdown-item>-->
+<!--                            </a>-->
+                            <el-dropdown-item command="throughput" v-show="center_visible">Throughput center</el-dropdown-item>
+                            <el-dropdown-item divided command="attendance">Attendance center</el-dropdown-item>
+                            <el-dropdown-item divided command="output">Output center</el-dropdown-item>
+                            <el-dropdown-item divided command="checklist">Daily checklist</el-dropdown-item>
+                            <el-dropdown-item divided command="loginout">logout</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -42,14 +59,16 @@
     </div>
 </template>
 <script>
-import { computed, onMounted } from "vue";
+import {computed, onMounted, ref} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 export default {
     setup() {
         const username = localStorage.getItem("ms_username");
+        const group = localStorage.getItem("role");
         const message = 2;
-
+        const collapse_visible=ref(false)
+        const center_visible=ref(true)
         const store = useStore();
         const collapse = computed(() => store.state.collapse);
         // 侧边栏折叠
@@ -57,29 +76,56 @@ export default {
             store.commit("handleCollapse", !collapse.value);
         };
 
-        onMounted(() => {
-            if (document.body.clientWidth < 1500) {
-                collapseChage();
-            }
-        });
+        // onMounted(() => {
+        //     if (document.body.clientWidth > 1000) {
+        //         collapseChage();
+        //     }
+        // });
 
         // 用户名下拉菜单选择事件
         const router = useRouter();
         const handleCommand = (command) => {
-            if (command == "loginout") {
-                localStorage.removeItem("ms_username");
-                router.push("/login");
-            } else if (command == "user") {
-                router.push("/user");
+          if (command === "loginout") {
+            localStorage.removeItem("ms_username");
+            router.push("/login");
+          } else if (command === "attendance") {
+            router.push('/att_statistic');
+          } else if (command === "throughput") {
+            router.push('/compressor_center');
+          } else if (command === "output") {
+            router.push('/output_center');
+          }
+            else if (command === "checklist") {
+            router.push('/form');
+          }
+        }
+        const handleTheme = (command) => {
+            if(command==="light"){
+              store.commit("handleTheme","light")
+            }else if(command==="middle"){
+              store.commit("handleTheme","middle")
+            }
+            else if(command==="heavy"){
+              store.commit("handleTheme","heavy")
             }
         };
-
+        onMounted(()=>{
+          if(group==="OperationMD"||group==="ProductionDirector"){
+           collapse_visible.value=true
+          }
+          if(group==="CNCLeader"||group==="AssemblyLeader"){
+           center_visible.value=false
+          }
+        })
         return {
             username,
             message,
             collapse,
             collapseChage,
             handleCommand,
+            handleTheme,
+            collapse_visible,
+            center_visible
         };
     },
 };
