@@ -1,0 +1,100 @@
+.MdGauge{
+    position: relative;
+    height: 46%;
+    margin: 10px;
+    background: ghostwhite;
+    border-radius:5px;
+    border-bottom-style: solid;
+    border-right-style: solid;
+    padding: 0;
+}
+@media screen and (max-width: 768px) {
+    .MdGauge{
+    position: relative;
+    height: 350px;
+    margin: 10px;
+    background: ghostwhite;
+    border-radius:5px;
+    border-bottom-style: solid;
+    border-right-style: solid;
+    padding: 0;
+}
+}
+.MdContent{
+    position: absolute;
+    top: 48%;
+    background: ghostwhite;
+    /*height: 100%;*/
+    width: 100%;
+    text-align: center;
+}
+
+.banner{
+    color: whitesmoke;
+    position: relative;
+    bottom: -25%;
+
+}
+
+.banner_container{
+    height: 6%;
+    background: #00B050;
+    border-radius:5px;
+    border-bottom-style: solid;
+    border-right-style: solid;
+    text-align: center;
+    margin: 10px;
+}
+@media screen and (max-width: 768px) {
+    .banner_container {
+        height: 45px;
+        background: #00B050;
+        border-radius: 5px;
+        border-bottom-style: solid;
+        border-right-style: solid;
+        text-align: center;
+        margin: 10px;
+    }
+}
+.md-row{
+    height: 100%;
+}
+@media screen and (max-width: 768px) {
+    .md-row{
+    height: 800px;
+}
+}
+.description{
+    position: absolute;
+    top: 35%;
+    left: 20%;
+    background: ghostwhite;
+}
+
+.info{
+    text-align: center;
+    font-size: small;
+    position: relative;
+    left: -10%;
+}
+
+.heading{
+    position: relative;
+    font-weight: bold;
+    left: 20%;
+
+}
+
+#CostOfQuality{
+    position: relative;
+    font-weight: bold;
+    left: 25%;
+}
+
+.TablePro{
+    /*overflow-y: scroll;*/
+    height: 38%;
+    border-top: black solid 5px;
+}
+
+
